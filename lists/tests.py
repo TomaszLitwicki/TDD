@@ -1,5 +1,17 @@
 from django.test import TestCase
+from django.http import HttpRequest
+from lists.views import home_page
 
-class SmokeTest(TestCase):
-    def test_bad_maths(self):
-        self.assertEqual(1+1, 2)
+# class SmokeTest(TestCase):
+#     def test_bad_maths(self):
+#         self.assertEqual(1+1, 2)
+
+class Home_Page_Test(TestCase):
+    def test_Home_page_returns_correct_html(self):
+        request = HttpRequest()
+        response = home_page(request)
+        html : str = response.content.decode('utf8')
+
+        self.assertIn('<title>To-Do lists</title>', html)
+        self.assertTrue(html.startswith("<html>"))
+        self.assertTrue(html.endswith("</html>"))
