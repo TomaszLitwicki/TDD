@@ -7,7 +7,7 @@ from lists.views import home_page
 #         self.assertEqual(1+1, 2)
 
 class Home_Page_Test(TestCase):
-    def test_Home_page_returns_correct_html(self):
+    def test_home_page_returns_correct_html(self):
         request = HttpRequest()
         response = home_page(request)
         html : str = response.content.decode('utf8')
@@ -15,3 +15,7 @@ class Home_Page_Test(TestCase):
         self.assertIn('<title>To-Do lists</title>', html)
         self.assertTrue(html.startswith("<html>"))
         self.assertTrue(html.endswith("</html>"))
+
+    def test_home_page_returns_correct_html_2(self):
+        response = self.client.get('/')
+        self.assertContains(response, "<title>To-Do lists</title>")
