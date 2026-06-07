@@ -16,10 +16,20 @@ class Home_Page_Test(TestCase):
     #     self.assertTrue(html.startswith("<html>"))
     #     self.assertTrue(html.endswith("</html>"))
 
+    # def test_renders_home_page_content(self):
+    #     response = self.client.get('/')
+    #     self.assertContains(response, "<title>To-Do lists</title>")
+
     def test_uses_home_page_template(self):
         response = self.client.get('/')
         self.assertTemplateUsed(response, "home.html")
     
-    def test_renders_home_page_content(self):
+    def test_renders_input_form(self):
         response = self.client.get('/')
-        self.assertContains(response, "<title>To-Do lists</title>")
+        self.assertContains(response, '<form method="POST">')
+        self.assertContains(response, '<input name="item_text"')
+
+    def test_can_saved_a_POST_request(self):
+        response = self.client.post("/", data={"item_text": "A new list item"})
+        self.assertContains(response, 'A new list item')
+        self.assertTemplateUsed(response, "home.html")
