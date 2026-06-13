@@ -30,23 +30,39 @@ class Home_Page_Test(TestCase):
         self.assertContains(response, '<form method="POST">')
         self.assertContains(response, '<input name="item_text"')
 
+    def test_display_all_list_items(self):
+        Item.objects.create(text="itemy 1")
+        Item.objects.create(text="itemy 2")
+
+        response = self.client.get("/")
+
+        self.assertContains(response, "itemy 1")
+        self.assertContains(response, "itemy 2")
+
     def test_can_saved_a_POST_request(self):
-        response = self.client.post("/", data={"item_text": "A new list item"})
+        self.client.post("/", data={"item_text": "A new list item"})
 
         self.assertEqual(Item.objects.count(), 1)
         first_item = Item.objects.first()
         self.assertEqual(first_item.text, "A new list item")
 
-        self.assertContains(response, 'A new list item')
-        self.assertTemplateUsed(response, "home.html")
+        # self.assertContains(response, 'A new list item')
+        # self.assertTemplateUsed(response, "home.html")
 
-    def test_can_save_multiple_items(self):
-        self.client.post("/", data = {"item_text": "first item"})
-        response = self.client.post("/", data={"item_text": "second item"})
+    def test_redirect_after_POST(self):
+        response = self.client.post("/", data={"item_text": "A new list item"})
+        self.assertRedirects(response, "/")
 
-        self.assertContains(response, "first item")
-        self.assertContains(response, "second item")
+    # def test_can_save_multiple_items(self):
+    #     self.client.post("/", data = {"item_text": "first item"})
+    #     response = self.client.post("/", data={"item_text": "second item"})
 
+    #     self.assertContains(response, "first item")
+    #     self.assertContains(response, "second item")
+
+    def test_only_saves_items_when_necessary(self):
+        self.client.get("/")
+        self.assertEqual(Item.objects.count(), 0)
 
 class ItemModelTest(TestCase):
     def test_saving_and_retrieving_items(self):
