@@ -31,13 +31,13 @@ class Home_Page_Test(TestCase):
         self.assertContains(response, '<input name="item_text"')
 
     def test_display_all_list_items(self):
-        Item.objects.create(text="itemy 1")
-        Item.objects.create(text="itemy 2")
+        Item.objects.create(text="itemey 1")
+        Item.objects.create(text="itemey 2")
 
         response = self.client.get("/")
 
-        self.assertContains(response, "itemy 1")
-        self.assertContains(response, "itemy 2")
+        self.assertContains(response, "itemey 1")
+        self.assertContains(response, "itemey 2")
 
     def test_can_saved_a_POST_request(self):
         self.client.post("/", data={"item_text": "A new list item"})
