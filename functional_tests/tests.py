@@ -76,9 +76,9 @@ class NewVisitorTest(LiveServerTestCase):
         # Edith starts a new to-do list
         self.browser.get(self.live_server_url)
         inputbox = self.browser.find_element(By.ID, "id_new_element")
-        inputbox.send_keys("Kup pawie piura")
+        inputbox.send_keys("Kup pawie pióra")
         inputbox.send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table("1: Kup pawie piura")
+        self.wait_for_row_in_list_table("1: Kup pawie pióra")
         
         # She notice that her list has a unique URL
         edith_list_url = self.browser.current_url
@@ -95,7 +95,7 @@ class NewVisitorTest(LiveServerTestCase):
         # There is no sign od Edith's list
         self.browser.get(self.live_server_url)
         page_text = self.browser.find_element(By.TAG_NAME, "body").text
-        self.assertNotIn("1: Kup pawie piura", page_text)
+        self.assertNotIn("1: Kup pawie pióra", page_text)
 
         # Francis starts a new list by entering a new item
         # He is less interesting than Edith...
@@ -112,7 +112,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Again, there is na trace of Edith's list
         page_text = self.browser.find_element(By.TAG_NAME, "body").text
-        self.assertNotIn("Kup pawie piura", page_text)
+        self.assertNotIn("Kup pawie pióra", page_text)
         self.assertIn("kupić mleko", page_text)
 
         # Satisfied, they both go back to sleep.
