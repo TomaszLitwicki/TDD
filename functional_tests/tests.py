@@ -72,3 +72,47 @@ class NewVisitorTest(LiveServerTestCase):
         # Satisfied, she goes back to sleep
         #self.fail("Finish the test!")
 
+    def test_multiple_users_can_start_lists_at_different_urls(self):
+        # Edith starts a new to-do list
+        self.browser.get(self.live_server_url)
+        inputbox = self.browser.find_element(By.ID, "id_new_element")
+        inputbox.send_keys("Kup pawie piura")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table("1: Kup pawie piura")
+        
+        # She notice that her list has a unique URL
+        edith_list_url = self.browser.current_url
+        print(f"\n\nMOJE UWAGI: {edith_list_url} \n\n")
+        self.assertRegex(edith_list_url, "/lists/.+")
+
+        # now a new user, Francis, comes along to the site.
+
+        ## DELETE ALL THE BROWSER'S COOKIES
+        ## as a way of simulating a brand new user sesion.
+        self.browser.delete_all_cookies()
+
+        # Francis visits the home page.
+        # There is no sign od Edith's list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element(By.TAG_NAME, "body").text
+        self.assertNotIn("1: Kup pawie piura", page_text)
+
+        # Francis starts a new list by entering a new item
+        # He is less interesting than Edith...
+        inputbox = self.browser.find_element(By.ID, "id_new_element")
+        inputbox.send_keys("Kupić mleko")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table("1: Kupić mleko")
+
+        # Grancis gets his own unique URL
+        francis_list_url = self.browser.current_url
+        print(f"\n\nMOJE UWAGI: {edith_list_url} \n\n")
+        self.assertRegex(francis_list_url, "/lists/.+")
+        self.assertNotEqual(francis_list_url, edith_list_url)
+
+        # Again, there is na trace of Edith's list
+        page_text = self.browser.find_element(By.TAG_NAME, "body").text
+        self.assertNotIn("Kup pawie piura", page_text)
+        self.assertIn("kupić mleko", page_text)
+
+        # Satisfied, they both go back to sleep.
