@@ -75,6 +75,10 @@ class ItemModelTest(TestCase):
         self.assertEqual(second_saved_item.text, "The second item")
 
 class ListViewTest(TestCase):
+    def test_uses_list_template(self):
+        response = self.client.get('/lists/the-only-list-on-the-world/')
+        self.assertTemplateUsed(response, "list.html")
+
     def test_renders_input_form(self):
         response = self.client.get('/lists/the-only-list-on-the-world/')
         self.assertContains(response, '<form method="POST" action="/">')

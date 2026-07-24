@@ -106,7 +106,8 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Grancis gets his own unique URL
         francis_list_url = self.browser.current_url
-        print(f"\n\nMOJE UWAGI: {edith_list_url} \n\n")
+        print(f"\n\nMOJE UWAGI edith: {edith_list_url} \n\n")
+        print(f"\n\nMOJE UWAGI francis: {francis_list_url} \n\n")
         self.assertRegex(francis_list_url, "/lists/.+")
         self.assertNotEqual(francis_list_url, edith_list_url)
 
