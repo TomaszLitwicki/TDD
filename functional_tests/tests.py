@@ -114,6 +114,6 @@ class NewVisitorTest(LiveServerTestCase):
         # Again, there is na trace of Edith's list
         page_text = self.browser.find_element(By.TAG_NAME, "body").text
         self.assertNotIn("Kup pawie pióra", page_text)
-        self.assertIn("kupić mleko", page_text)
+        self.assertIn("Kupić mleko", page_text)
 
         # Satisfied, they both go back to sleep.
