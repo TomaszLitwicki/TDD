@@ -82,7 +82,7 @@ class ListAndItemModelTest(TestCase):
         self.assertEqual(first_saved_item.text, "The first list item")
         self.assertEqual(first_saved_item.list, mylist)
         self.assertEqual(second_saved_item.text, "The second item")
-        self.assertEqual(second_saved_item, mylist)
+        self.assertEqual(second_saved_item.list, mylist)
 
 class ListViewTest(TestCase):
     def test_uses_list_template(self):
@@ -95,8 +95,9 @@ class ListViewTest(TestCase):
         self.assertContains(response, '<input name="item_text"')
 
     def test_display_all_list_items(self):
-        Item.objects.create(text="itemey 1")
-        Item.objects.create(text="itemey 2")
+        mylist=List.objects.create()
+        Item.objects.create(text="itemey 1", list=mylist)
+        Item.objects.create(text="itemey 2", list=mylist)
 
         response = self.client.get("/lists/the-only-list-on-the-world/")
 
