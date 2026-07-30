@@ -1,19 +1,5 @@
-<html>
-	<head>
-		<title>To-Do lists</title>
-		<style>
-    		table, th, td {
-      			border: 1px solid black;   /* Czarne linie siatki */
-      			border-collapse: collapse; /* Pojedyncze linie zamiast podwójnych */
-      			padding: 6px;              /* Minimalny odstęp tekst-ramka */
-			    }
-  		</style>
-	</head>
-	<body>
-		<h1>Start a new To-Do list.</h1>
-		<form method="POST" action="/lists/new">
-			<input name="item_text" id="id_new_element" placeholder="Enter a to-do item"/>
-			{% csrf_token %}
-		</form>
-	</body>
-</html>
+{% extends "base.html" %}
+
+{% block header_text %}Start a new To-Do list{% endblock header_text %}
+
+{% block form_action %}/lists/new{% endblock form_action %}
