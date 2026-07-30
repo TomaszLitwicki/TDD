@@ -117,3 +117,35 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn("Kupić mleko", page_text)
 
         # Satisfied, they both go back to sleep.
+
+    def test_look_and_feel(self):
+        # Edith wchodzi na stronę główną
+        self.browser.get(self.live_server_url)
+
+        # Przeglądarka Edith ma specyficzne wymiary
+        self.browser.set_window_size(1024, 768)
+
+        # Edith dostrzega, że element do wprowadzania tresci jest ładnie wyśrodkowany
+        inputbox = self.browser.find_element(By.ID, "id_new_element")
+        print(f'LOCATION: {(a := inputbox.location["x"])}')
+        print(f'WIDTH: {(b := inputbox.size["width"])}')
+        print(f'MIDDLE OF ELEMENT: {a+b/2}')
+        print(f'WINDOW: {(c := self.browser.execute_script("return window.innerWidth;"))}')
+        print(f'MIDDLE OF WINDOW: {c/2}')
+        self.assertAlmostEqual(
+            (inputbox.location["x"] + inputbox.size["width"]/2)*1.05,
+            512,
+            delta=10,
+        )
+
+        # Edith rozpoczyna nową listę i dostrzega, że element jest także wyśrodkowany
+        inputbox.send_keys("testing")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table("1: testing")
+        inputbox = self.browser.find_element(By.ID, "id_new_element")
+        self.assertAlmostEqual(
+            (d:=(inputbox.location['x'] + inputbox.size['width']/2)*1.05),
+            512,
+            delta=10
+        )
+        print(f'CENTER OF NEW ELEMENT: {d}')
