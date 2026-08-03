@@ -28,7 +28,7 @@ class Home_Page_Test(TestCase):
     def test_renders_input_form(self):
         response = self.client.get('/')
         self.assertContains(response, '<form method="POST" action="/lists/new">')
-        self.assertContains(response, '<input name="item_text"')
+        self.assertContains(response, '<input name="item_text"', html=True)
 
     # def test_can_saved_a_POST_request(self):
     #     self.client.post("/", data={"item_text": "A new list item"})
@@ -94,7 +94,7 @@ class ListViewTest(TestCase):
         mylist = List.objects.create()
         response = self.client.get(f'/lists/{mylist.id}/')
         self.assertContains(response, f'<form method="POST" action="/lists/{mylist.id}/add_item">')
-        self.assertContains(response, '<input name="item_text"')
+        self.assertContains(response, '<input name="item_text"', html=True)
 
     def test_display_all_list_items(self):
         correct_list = List.objects.create()
