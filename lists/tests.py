@@ -1,5 +1,6 @@
 from django.test import TestCase
 from lists.models import Item, List
+import lxml.html
 # from django.http import HttpRequest
 # from lists.views import home_page
 
@@ -27,8 +28,14 @@ class Home_Page_Test(TestCase):
     
     def test_renders_input_form(self):
         response = self.client.get('/')
-        self.assertContains(response, '<form method="POST" action="/lists/new">')
-        self.assertContains(response, '<input name="item_text"', html=True)
+        # self.assertContains(response, '<form method="POST" action="/lists/new">')
+        # self.assertContains(response, '<input name="item_text"', html=True)
+        # self.assertContains(response, '<input name="item_text" id="id_new_item" placeholder="Enter a to-do item" />', html=True)
+        parsed = lxml.html.fromstring(response.content)
+        [form] = parsed.cssselect("form[method=POST]")
+        self.assertEqual(form.get("action"), "/lists/new")
+        inputs = form.cssselect("input")
+        self.assertIn("item_text", [input.get("name") for input in inputs])
 
     # def test_can_saved_a_POST_request(self):
     #     self.client.post("/", data={"item_text": "A new list item"})
@@ -93,8 +100,14 @@ class ListViewTest(TestCase):
     def test_renders_input_form(self):
         mylist = List.objects.create()
         response = self.client.get(f'/lists/{mylist.id}/')
-        self.assertContains(response, f'<form method="POST" action="/lists/{mylist.id}/add_item">')
-        self.assertContains(response, '<input name="item_text"', html=True)
+        # self.assertContains(response, f'<form method="POST" action="/lists/{mylist.id}/add_item">')
+        # self.assertContains(response, '<input name="item_text"', html=True)
+        parsed = lxml.html.fromstring(response.content)
+        [form] = parsed.cssselect("form[method=POST]")
+        self.assertEqual(form.get("action"), f'/lists/{mylist.id}/add_item')
+        inputs = form.cssselect("input")
+        self.assertIn("item_text", [input.get("name") for input in inputs])
+
 
     def test_display_all_list_items(self):
         correct_list = List.objects.create()
